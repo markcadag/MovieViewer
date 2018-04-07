@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context="com.markcadag.movieviewer.ui.moviedetails.MovieDetailsActivity">
+
+            <ImageView
+                android:contentDescription="@string/movie_poster_landscape"
+                android:id="@+id/img_mdetails"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_140sdp" />
+
+            <LinearLayout
+                android:id="@+id/ll_movie_details"
+                android:layout_below="@id/img_mdetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10">
+
+                <ImageView
+                    android:contentDescription="@string/movie_poster"
+                    android:id="@+id/img_movie_poster"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:layout_weight="4"
+                    android:scaleType="fitStart"
+                    android:adjustViewBounds="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:padding="@dimen/_8sdp"
+                    android:layout_weight="6"
+                    android:layout_width="0dp"
+                    android:orientation="vertical"
+                    android:divider="@drawable/vertical_divider"
+                    android:showDividers="middle"
+                    android:layout_height="wrap_content">
+
+                    <include
+                        android:id="@+id/item_movie_name"
+                        layout="@layout/item_movie_details" />
+
+                    <include
+                        android:id="@+id/item_movie_genre"
+                        layout="@layout/item_movie_details" />
+
+                    <include
+                        android:id="@+id/item_movie_advisory"
+                        layout="@layout/item_movie_details" />
+
+                    <include
+                        android:id="@+id/item_movie_duration"
+                        layout="@layout/item_movie_details" />
+
+                    <include
+                        android:id="@+id/item_movie_date"
+                        layout="@layout/item_movie_details" />
+
+                    <include
+                        android:id="@+id/item_movie_syspnosis"
+                        layout="@layout/item_movie_details" />
+
+                    <include
+                        android:id="@+id/item_movie_cast"
+                        layout="@layout/item_movie_details" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_below="@+id/ll_movie_details"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_36sdp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/txt_view_seat"
+        android:layout_gravity="bottom"
+        android:background="@android:color/holo_red_dark"
+        android:gravity="center"
+        android:padding="@dimen/_12sdp"
+        android:textSize="@dimen/_16ssp"
+        android:textColor="@android:color/white"
+        android:text="@string/view_seat_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</FrameLayout>

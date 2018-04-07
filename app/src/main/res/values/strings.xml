@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Movie Viewer</string>
+    <string name="failed_to_fetch_movie">Failed to fetch movie details</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="movie_poster_landscape">Movie Poster Landscape</string>
+    <string name="loading">Loading...</string>
+    <string name="name">Name:</string>
+    <string name="genre">Genre:</string>
+    <string name="advisory">Advisory Rating:</string>
+    <string name="duration">Duration:</string>
+    <string name="date">Release Date:</string>
+    <string name="sypnosis">Sypnosis:</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="view_seat_map">View Seat Map</string>
+    <string name="cast">Cast:</string>
+</resources>
