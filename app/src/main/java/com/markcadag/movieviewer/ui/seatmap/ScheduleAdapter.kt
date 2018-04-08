@@ -14,11 +14,7 @@ import com.markcadag.movieviewer.model.Schedule
  */
 class ScheduleAdapter(context: Activity?, resourceId: Int, textViewId: Int) : ArrayAdapter<Schedule>(context, resourceId, textViewId) {
 
-    private val inflater: LayoutInflater?
-
-    init {
-        inflater = context?.layoutInflater
-    }
+    private val inflater: LayoutInflater? = context?.layoutInflater
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var convertedView = convertView

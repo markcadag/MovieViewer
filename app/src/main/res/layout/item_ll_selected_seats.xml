@@ -24,7 +24,7 @@
         android:paddingStart="@dimen/_16sdp"
         android:paddingEnd="@dimen/_16sdp"
         android:paddingRight="@dimen/_16sdp"
-        android:text="NONE"
+        android:text="@string/none"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

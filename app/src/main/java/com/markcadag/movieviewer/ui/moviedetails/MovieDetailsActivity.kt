@@ -40,6 +40,15 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnCl
     }
 
     /**
+     * Impl methods
+     */
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            R.id.txt_view_seat -> showSeatMap()
+        }
+    }
+
+    /**
      * Mvp methods
      */
     override fun onLoadMovieDetails(movie: Movie) {
@@ -57,15 +66,6 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnCl
             noButton {  }
         }.show()
 
-    }
-
-    /**
-     * Impl methods
-     */
-    override fun onClick(v: View?) {
-        when(v?.id) {
-            R.id.txt_view_seat -> showSeatMap()
-        }
     }
 
     /**
@@ -95,7 +95,6 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnCl
 
         txt_view_seat.setOnClickListener(this)
     }
-
 
     private fun initView(movie: Movie) {
         /**

@@ -78,6 +78,9 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
                 }))
     }
 
+    /**
+     * Filter Cinema by the given schedule and date
+     */
     fun filterCinema(date : Date, schedule: ScheduleResp) {
         checkViewAttached()
 
@@ -90,11 +93,14 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
 
              mvpView?.onLoadCinemas(cinemaRoot?.cinemas)
             } catch (e: Exception) {
-                mvpView?.onErrorParsingSchedule()
+                mvpView?.onFailedToFetchCinema()
             }
         }
     }
 
+    /**
+     * Filter time by the given schedule and cinema
+     */
     fun filterTime(cinema : Cinema, schedule : ScheduleResp) {
         checkViewAttached()
 
@@ -107,7 +113,7 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
 
                 mvpView?.onLoadTimeSchedule(timeRoot?.times)
             } catch (e: Exception) {
-                mvpView?.onErrorParsingSchedule()
+                mvpView?.onFailedToFetchTime()
             }
         }
     }

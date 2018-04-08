@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -18,7 +19,7 @@ import java.util.*
 open class SeatMapView : LinearLayout {
     private var seatMap : SeatMap? = null
     private var onSeatClickListener : OnSeatClickListener? = null
-    var selectedSeats  = arrayListOf<SeatView>()
+    var selectedSeats  = arrayListOf<String>()
     var maxBooking = 10
 
     constructor(context: Context) : super(context)
@@ -33,6 +34,7 @@ open class SeatMapView : LinearLayout {
     init {
         this.orientation = LinearLayout.VERTICAL
         this.addView(LayoutInflater.from(context).inflate(R.layout.row_banner, this, false))
+
     }
 
     fun setSeatMap(seatMap: SeatMap) {
@@ -88,7 +90,12 @@ open class SeatMapView : LinearLayout {
                     seatStatus = SeatView.SeatStatus.Available
                 } else if(name.contains("(")) {
                     seatStatus = SeatView.SeatStatus.Space
+                } else if (selectedSeats.contains(name)) {
+                    Log.e("OMG2", "is selected " + name)
+                    seatStatus = SeatView.SeatStatus.Selected
                 }
+
+                Log.e("OMG1", selectedSeats.toString() + "OMG to =" + name )
 
                 val seatView = SeatView(context, name, seatStatus)
                 seatView.setOnClickListener {
@@ -114,14 +121,14 @@ open class SeatMapView : LinearLayout {
                          * Add seatview to selected seats
                          */
                         seatView.setStatus(SeatView.SeatStatus.Selected)
-                        selectedSeats.add(seatView)
+                        selectedSeats.add(seatView.name)
                     } else {
 
                         /**
                          * Remove seats logic
                          */
                         seatView.setStatus(SeatView.SeatStatus.Available)
-                        selectedSeats.remove(seatView)
+                        selectedSeats.remove(seatView.name)
                     }
                     onSeatClickListener?.onClickSeat(it as SeatView)
                 }
@@ -138,6 +145,17 @@ open class SeatMapView : LinearLayout {
         return linearContainer
     }
 
+    fun maxBooking(maxBooking: Int) {
+        this.maxBooking = maxBooking
+    }
+
+    fun reset() {
+
+        removeAllViews()
+        selectedSeats.clear()
+        mapSeatMap()
+    }
+
     fun setONSeatClickListener(onSeatClickListener: OnSeatClickListener){
         this.onSeatClickListener = onSeatClickListener
     }
@@ -147,7 +165,4 @@ open class SeatMapView : LinearLayout {
        fun onBookingMax()
     }
 
-    fun maxBooking(maxBooking: Int) {
-        this.maxBooking = maxBooking
-    }
 }

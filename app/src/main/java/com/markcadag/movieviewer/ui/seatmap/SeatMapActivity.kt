@@ -27,7 +27,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     lateinit var scheduleAdapterTime: ScheduleAdapter
     private var schedule : ScheduleResp? = null
     private var alertDIalog: Dialog? = null
-    private val MAX_BOOKING = 6
+    private val MAX_BOOKING = 10
 
     /**
      * Lifecycle methods
@@ -45,6 +45,19 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
 
         fetchSeatMap()
         fetchSchedule()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putSerializable("selected_seats", item_frame_seatview.seatmap_view.selectedSeats);
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val selectedSeats = savedInstanceState?.getStringArrayList("selected_seats") as ArrayList<String>
+        item_frame_seatview.seatmap_view.selectedSeats = selectedSeats
+        item_frame_seatview.seatmap_view.mapSeatMap()
+        updateViews()
     }
 
     override fun onDestroy() {
@@ -67,13 +80,16 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
                 R.id.spinner_cinema -> {
                     seatMaprepsenter.filterTime(scheduleAdapterCinema.getItem(position) as Cinema, it)
                 }
+
+                R.id.spinner_time -> {
+                    updateViews()
+                }
             }
         }
     }
 
     override fun onClickSeat(seatView: SeatView) {
-        updateSelectedSeatsView()
-        updateCost()
+       updateViews()
     }
 
     override fun onBookingMax() {
@@ -98,6 +114,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     override fun onLoadTimeSchedule(times: List<Time?>?) {
         scheduleAdapterTime.clear()
         scheduleAdapterTime.addAll(times)
+        item_ll_schedule.spinner_time.onItemSelectedListener = this
     }
 
     override fun onLoadCinemas(cinemas: List<Cinema?>?) {
@@ -105,12 +122,16 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
         scheduleAdapterCinema.addAll(cinemas)
     }
 
-    override fun onErrorParsingSchedule() {
+    override fun onFailedToFetchTime() {
+        scheduleAdapterTime.clear()
+        scheduleAdapterTime.notifyDataSetChanged()
+    }
+
+    override fun onFailedToFetchCinema() {
         scheduleAdapterCinema.clear()
         scheduleAdapterCinema.notifyDataSetChanged()
 
-        scheduleAdapterTime.clear()
-        scheduleAdapterTime.notifyDataSetChanged()
+        onFailedToFetchTime()
     }
 
     override fun onChangeSelectedSeats(selectedSeatView: ArrayList<SeatView>) {
@@ -139,17 +160,33 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     private fun updateSelectedSeatsView() {
         val stringList = arrayListOf<String>()
         item_frame_seatview.seatmap_view.selectedSeats.forEach {
-            stringList.add(it.name)
+            stringList.add(it)
         }
         item_ll_selected_seats.txt_selected_seats.text = TextUtil.toTagView(this, stringList)
     }
 
     private fun updateCost() {
-        val time = scheduleAdapterTime.getItem(item_ll_schedule.spinner_time.selectedItemPosition) as Time
-        time.price?.toFloat()?.let {
-           val total = (it * item_frame_seatview.seatmap_view.selectedSeats.size).toDouble()
-            item_ll_total_price.txt_total_cost.text = TextUtil.toFormattedPrice(total)
+        if(item_ll_schedule.spinner_time.selectedItemPosition != -1) {
+            val time = scheduleAdapterTime.getItem(item_ll_schedule.spinner_time.selectedItemPosition) as? Time
+            time?.price?.toFloat()?.let {
+                val total = (it * item_frame_seatview.seatmap_view.selectedSeats.size).toDouble()
+                item_ll_total_price.txt_total_cost.text = TextUtil.toFormattedPrice(total)
+            }
         }
+    }
+//
+//    private fun resetView() {
+//        toast("View reset")
+//
+//        item_frame_seatview.seatmap_view.reset()
+//
+//        item_ll_total_price.txt_total_cost.text = resources.getString(R.string.php_0_00)
+//        txt_selected_seats.text = resources.getString(R.string.none)
+//    }
+
+    private fun updateViews() {
+        updateSelectedSeatsView()
+        updateCost()
     }
 
     private fun initAdapters() {

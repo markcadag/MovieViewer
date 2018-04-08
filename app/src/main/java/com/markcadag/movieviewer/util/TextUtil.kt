@@ -16,11 +16,10 @@ object TextUtil {
      * Format double value to readable price text
      */
     fun toFormattedPrice(price : Double) : String {
-        val df = DecimalFormat("###,###,###.##")
-
         var bd = BigDecimal(price)
+        val f = DecimalFormat("###,###.00")
         bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP)
-        return "PHP ${df.format(bd.toFloat())}"
+        return "Php ${f.format(bd)}"
     }
 
     /**

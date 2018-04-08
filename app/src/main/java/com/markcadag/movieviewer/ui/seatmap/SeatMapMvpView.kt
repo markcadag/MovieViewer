@@ -14,7 +14,8 @@ interface SeatMapMvpView : MvpView {
     fun onLoadSeatMap(seatMap: SeatMap)
     fun onLoadScheduleResp(schedule: ScheduleResp)
     fun onLoadTimeSchedule(times: List<Time?>?)
-    fun onErrorParsingSchedule()
     fun onLoadCinemas(cinemas: List<Cinema?>?)
     fun onChangeSelectedSeats(selectedSeatView: ArrayList<SeatView>)
+    fun onFailedToFetchTime()
+    fun onFailedToFetchCinema()
 }
