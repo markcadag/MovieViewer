@@ -1,6 +1,6 @@
 package com.markcadag.movieviewer.ui.seatmap
 
-import com.markcadag.movieviewer.model.Schedule
+import com.markcadag.movieviewer.model.ScheduleResp
 import com.markcadag.movieviewer.model.SeatMap
 import com.markcadag.movieviewer.ui.base.MvpView
 
@@ -9,5 +9,5 @@ import com.markcadag.movieviewer.ui.base.MvpView
  */
 interface SeatMapMvpView : MvpView {
     fun onLoadSeatMap(seatMap: SeatMap)
-    fun onLoadSchedule(schedule: Schedule)
+    fun onLoadScheduleResp(schedule: ScheduleResp)
 }

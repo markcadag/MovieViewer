@@ -1,7 +1,7 @@
 package com.markcadag.movieviewer.ui.seatmap
 
 import com.markcadag.movieviewer.R
-import com.markcadag.movieviewer.model.Schedule
+import com.markcadag.movieviewer.model.ScheduleResp
 import com.markcadag.movieviewer.model.SeatMap
 import com.markcadag.movieviewer.service.ApiService
 import com.markcadag.movieviewer.service.ServiceGenerator
@@ -58,18 +58,18 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
         compositeDisposable.add(apiService
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<Response<Schedule>>() {
+                .subscribeWith(object : DisposableObserver<Response<ScheduleResp>>() {
                     override fun onError(e: Throwable) {
                         mvpView?.onError(R.string.failed_to_fetch_movie)
                     }
 
-                    override fun onNext(t: Response<Schedule>) {
+                    override fun onNext(t: Response<ScheduleResp>) {
                         if(!t.isSuccessful) {
                             mvpView?.onError(R.string.failed_to_fetch_movie)
                             return
                         }
                         t.body()?.let {
-                            mvpView?.onLoadSchedule(it)
+                            mvpView?.onLoadScheduleResp(it)
                         }
                     }
 
