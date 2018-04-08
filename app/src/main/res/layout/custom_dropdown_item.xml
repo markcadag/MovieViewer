@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_8sdp"
         android:paddingBottom="@dimen/_12sdp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:paddingTop="@dimen/_12sdp"
         tools:ignore="MissingPrefix" />
 

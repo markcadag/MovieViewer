@@ -4,8 +4,10 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import com.markcadag.movieviewer.R
 import com.markcadag.movieviewer.model.SeatMap
 import java.util.*
 
@@ -30,7 +32,7 @@ open class SeatMapView : LinearLayout {
 
     init {
         this.orientation = LinearLayout.VERTICAL
-        this.addView(RowBanner(context))
+        this.addView(LayoutInflater.from(context).inflate(R.layout.row_banner, this, false))
     }
 
     fun setSeatMap(seatMap: SeatMap) {
@@ -90,12 +92,20 @@ open class SeatMapView : LinearLayout {
 
                 val seatView = SeatView(context, name, seatStatus)
                 seatView.setOnClickListener {
+
+                    /**
+                     * Disable click event on reserved seats
+                     */
+                    if (seatView.seatStatus == SeatView.SeatStatus.Reserved) {
+                        return@setOnClickListener
+                    }
+
                     if (seatView.seatStatus == SeatView.SeatStatus.Available) {
 
                         /**
                          * Cancel click listener if booking is maxed out
                          */
-                        if (selectedSeats.size > maxBooking) {
+                        if (selectedSeats.size >= maxBooking) {
                             onSeatClickListener?.onBookingMax()
                             return@setOnClickListener
                         }

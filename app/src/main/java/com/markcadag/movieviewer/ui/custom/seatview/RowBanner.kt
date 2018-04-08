@@ -13,14 +13,20 @@ open class RowBanner(context: Context?) : TextView(context) {
 
     init {
         this.text = context?.getString(R.string.movie_screen)
+        textSize = resources.getDimension(R.dimen._3ssp)
         gravity = Gravity.CENTER
 
-        val padding = context?.resources?.getDimensionPixelSize(R.dimen._12sdp)
-        padding?.let {
+        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        params.weight = 1.0f;
+        params.gravity = Gravity.TOP
+
+        val space = context?.resources?.getDimensionPixelSize(R.dimen._8sdp)
+        space?.let {
             setPadding(it, it, it, it)
+            params.setMargins(it, it, it, it)
         }
 
-        this.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        this.layoutParams = params
         this.setBackgroundResource(R.drawable.grey_rect_o)
 
     }

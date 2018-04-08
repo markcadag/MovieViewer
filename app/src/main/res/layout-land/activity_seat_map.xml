@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="match_parent"
+    android:weightSum="2"
+    tools:context="com.markcadag.movieviewer.ui.seatmap.SeatMapActivity">
+
+    <include
+        android:id="@+id/item_frame_seatview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        layout="@layout/item_frame_setview" />
+
+    <RelativeLayout
+        android:background="@drawable/grey_rect_o"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/item_text_teather" />
+
+        <include
+            android:id="@+id/item_ll_schedule"
+            layout="@layout/item_ll_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_theather"/>
+
+        <include
+            android:id="@+id/item_ll_legend"
+            layout="@layout/item_ll_legend"
+            android:layout_below="@+id/item_ll_schedule"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+
+        <include
+            android:layout_below="@+id/item_ll_legend"
+            android:id="@+id/item_ll_selected_seats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/item_ll_selected_seats" />
+
+        <include
+            android:id="@+id/item_ll_total_price"
+            layout="@layout/item_ll_total_price" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

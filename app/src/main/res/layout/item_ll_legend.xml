@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/activity_seat_map">
+
+    <TextView
+        android:text="@string/available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/grey_rect"
+        android:drawableLeft="@drawable/grey_rect"
+        style="@style/MovieViewText.Legend" />
+
+    <TextView
+        android:text="@string/reserved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/blue_rect"
+        android:drawableLeft="@drawable/blue_rect"
+        style="@style/MovieViewText.Legend" />
+
+    <TextView
+        android:text="@string/selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/red_rect"
+        android:drawableLeft="@drawable/red_rect"
+        style="@style/MovieViewText.Legend" />
+
+</LinearLayout>

@@ -16,4 +16,11 @@
     <string name="movie_screen">Movie Screen</string>
     <string name="failed_to_fetch_schedule">Failed to fetch scehdule</string>
     <string name="booking_maxed_out">Maximum of 6 reservation only</string>
+    <string name="teather_glorieta_4">Teather: Glorieta 4</string>
+    <string name="your_selected_seats">Your selected seats:</string>
+    <string name="total">Total</string>
+    <string name="php_0_00">Php 0.00</string>
+    <string name="reserved">Reserved</string>
+    <string name="available">Available</string>
+    <string name="selected">Selected</string>
 </resources>

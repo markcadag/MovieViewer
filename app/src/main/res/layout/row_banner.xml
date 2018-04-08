@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_margin="@dimen/_8sdp"
+    android:textSize="@dimen/_12ssp"
+    android:layout_gravity="center"
+    android:background="@drawable/grey_rect_o"
+    android:text="@string/movie_screen"
+    android:layout_height="wrap_content" />

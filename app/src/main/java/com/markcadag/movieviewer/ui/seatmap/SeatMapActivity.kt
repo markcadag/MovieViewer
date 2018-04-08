@@ -3,8 +3,6 @@ package com.markcadag.movieviewer.ui.seatmap
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.SpannableStringBuilder
-import android.text.Spanned
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -12,10 +10,14 @@ import com.markcadag.movieviewer.R
 import com.markcadag.movieviewer.model.*
 import com.markcadag.movieviewer.ui.custom.seatview.SeatMapView
 import com.markcadag.movieviewer.ui.custom.seatview.SeatView
-import com.markcadag.movieviewer.ui.custom.tagview.RoundedBackgroundSpan
+import com.markcadag.movieviewer.util.TextUtil
 import kotlinx.android.synthetic.main.activity_seat_map.*
+import kotlinx.android.synthetic.main.item_frame_setview.view.*
+import kotlinx.android.synthetic.main.item_ll_schedule.view.*
+import kotlinx.android.synthetic.main.item_ll_selected_seats.view.*
+import kotlinx.android.synthetic.main.item_ll_total_price.view.*
 import org.jetbrains.anko.alert
-
+import org.jetbrains.anko.toast
 
 
 class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemSelectedListener, SeatMapView.OnSeatClickListener {
@@ -25,6 +27,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     lateinit var scheduleAdapterTime: ScheduleAdapter
     private var schedule : ScheduleResp? = null
     private var alertDIalog: Dialog? = null
+    private val MAX_BOOKING = 6
 
     /**
      * Lifecycle methods
@@ -69,29 +72,22 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     }
 
     override fun onClickSeat(seatView: SeatView) {
-        Log.e(TAG, seatView.name)
-//        if(seatView.seatStatus == SeatView.SeatStatus.Available) {
-//            seatView.setStatus(SeatView.SeatStatus.Selected)
-//        } else {
-//            seatView.setStatus(SeatView.SeatStatus.Available)
-//        }
-
         updateSelectedSeatsView()
+        updateCost()
     }
 
     override fun onBookingMax() {
-        alert { resources.getString(R.string.booking_maxed_out) }.show()
+        toast(resources.getString(R.string.booking_maxed_out))
     }
 
     /**
      * Mvp methods
      */
     override fun onLoadSeatMap(seatMap: SeatMap) {
-        seatmap_view.setSeatMap(seatMap)
-        seatmap_view.mapSeatMap()
-        seatmap_view.maxBooking(6)
-        seatmap_view.setONSeatClickListener(this)
-        seatMaprepsenter.observeSelectedSeats()
+        item_frame_seatview.seatmap_view.setSeatMap(seatMap)
+        item_frame_seatview.seatmap_view.mapSeatMap()
+        item_frame_seatview.seatmap_view.maxBooking(MAX_BOOKING)
+        item_frame_seatview.seatmap_view.setONSeatClickListener(this)
     }
 
     override fun onLoadScheduleResp(schedule: ScheduleResp) {
@@ -141,36 +137,36 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     }
 
     private fun updateSelectedSeatsView() {
-        val stringBuilder = SpannableStringBuilder()
-
-        var between = ""
-        seatmap_view.selectedSeats.forEach{
-            stringBuilder.append(between)
-            if (between.length == 0) between = "  "
-            val thisTag = "  ${it.name}  "
-            stringBuilder.append("  ${it.name}  ")
-            stringBuilder.setSpan(RoundedBackgroundSpan(this), stringBuilder.length - thisTag.length,
-                    stringBuilder.length - thisTag.length + thisTag.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val stringList = arrayListOf<String>()
+        item_frame_seatview.seatmap_view.selectedSeats.forEach {
+            stringList.add(it.name)
         }
+        item_ll_selected_seats.txt_selected_seats.text = TextUtil.toTagView(this, stringList)
+    }
 
-        txt_selected_seats.text = stringBuilder
+    private fun updateCost() {
+        val time = scheduleAdapterTime.getItem(item_ll_schedule.spinner_time.selectedItemPosition) as Time
+        time.price?.toFloat()?.let {
+           val total = (it * item_frame_seatview.seatmap_view.selectedSeats.size).toDouble()
+            item_ll_total_price.txt_total_cost.text = TextUtil.toFormattedPrice(total)
+        }
     }
 
     private fun initAdapters() {
         scheduleAdapterDate = ScheduleAdapter(this,
                 R.layout.custom_dropdown_item, R.id.txt_title)
         scheduleAdapterDate.addAll(schedule?.dates)
-        spinner_date.adapter = scheduleAdapterDate
-        spinner_date.onItemSelectedListener = this
+        item_ll_schedule.spinner_date.adapter = scheduleAdapterDate
+        item_ll_schedule.spinner_date.onItemSelectedListener = this
 
         scheduleAdapterCinema = ScheduleAdapter(this,
                 R.layout.custom_dropdown_item, R.id.txt_title)
-        spinner_cinema.adapter = scheduleAdapterCinema
-        spinner_cinema.onItemSelectedListener = this
+        item_ll_schedule.spinner_cinema.adapter = scheduleAdapterCinema
+        item_ll_schedule.spinner_cinema.onItemSelectedListener = this
 
         scheduleAdapterTime = ScheduleAdapter(this,
                 R.layout.custom_dropdown_item, R.id.txt_title)
-        spinner_time.adapter = scheduleAdapterTime
+        item_ll_schedule.spinner_time.adapter = scheduleAdapterTime
     }
 
     companion object {

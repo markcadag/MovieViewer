@@ -16,17 +16,10 @@ import retrofit2.Response
  */
 open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
     private var compositeDisposable : CompositeDisposable = CompositeDisposable()
-    var seatObserver: SeatClickObserver? = null
 
     override fun detachView() {
         super.detachView()
         compositeDisposable.dispose()
-    }
-
-    fun observeSelectedSeats() {
-        checkViewAttached()
-
-        seatObserver =  SeatClickObserver(mvpView)
     }
 
     fun fetchSeatMap() {
@@ -83,8 +76,6 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
 
                     override fun onComplete() { }
                 }))
-
-
     }
 
     fun filterCinema(date : Date, schedule: ScheduleResp) {
