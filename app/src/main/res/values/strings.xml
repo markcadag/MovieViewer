@@ -13,4 +13,5 @@
     <string name="movie_poster">Movie Poster</string>
     <string name="view_seat_map">View Seat Map</string>
     <string name="cast">Cast:</string>
+    <string name="movie_screen">Movie Screen</string>
 </resources>

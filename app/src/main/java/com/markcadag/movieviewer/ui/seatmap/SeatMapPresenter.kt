@@ -78,5 +78,4 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
 
 
     }
-
 }

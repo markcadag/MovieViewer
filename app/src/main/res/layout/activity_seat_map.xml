@@ -6,10 +6,65 @@
     android:layout_height="match_parent"
     tools:context="com.markcadag.movieviewer.ui.seatmap.SeatMapActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/ll_seatmap"
+    <TextView
+        android:id="@+id/txt_theather"
+        android:padding="@dimen/_8sdp"
+        android:textSize="@dimen/_9ssp"
+        android:text="Teather:    Glorieta 4"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/ll_schedules"
+        android:layout_below="@id/txt_theather"
+        android:layout_width="match_parent"
+        android:weightSum="3"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_below="@+id/ll_schedules"
+        android:id="@+id/frame_setview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.markcadag.movieviewer.ui.custom.seatview.ZoomView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.markcadag.movieviewer.ui.custom.seatview.SeatMapView
+                android:id="@+id/seatmap_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.markcadag.movieviewer.ui.custom.seatview.ZoomView>
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/ll_selected_seats"
+        android:layout_below="@+id/frame_setview"
+        android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

@@ -2,9 +2,6 @@ package com.markcadag.movieviewer.ui.seatmap
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.markcadag.movieviewer.R
 import com.markcadag.movieviewer.model.Schedule
 import com.markcadag.movieviewer.model.SeatMap
@@ -25,14 +22,19 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView {
 
         fetchSeatMap()
         fetchSchedule()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        seatMaprepsenter.detachView()
     }
 
     /**
      * Mvp methods
      */
     override fun onLoadSeatMap(seatMap: SeatMap) {
-        initSeatMapView(seatMap)
+        seatmap_view.setSeatMap(seatMap)
+        seatmap_view.mapSeatMap()
     }
 
     override fun onLoadSchedule(schedule: Schedule) {
@@ -54,19 +56,8 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView {
         seatMaprepsenter.fetchSchedule()
     }
 
-    private fun initSeatMapView(seatMap: SeatMap) {
-        seatMap.seatmap?.forEach {
-            val linearContainer = LinearLayout(this)
-            it?.forEach {
-                Log.e(TAG, it)
-                val txtView = TextView(this)
-                txtView.setText(it)
-
-                linearContainer.addView(txtView)
-            }
-
-            ll_seatmap.addView(linearContainer)
-        }
+    private fun onItemSelected() {
+//        ll_selected_seats.addView()
     }
 
     companion object {
