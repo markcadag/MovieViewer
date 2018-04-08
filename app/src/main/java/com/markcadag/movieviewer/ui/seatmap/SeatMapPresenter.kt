@@ -1,8 +1,7 @@
 package com.markcadag.movieviewer.ui.seatmap
 
 import com.markcadag.movieviewer.R
-import com.markcadag.movieviewer.model.ScheduleResp
-import com.markcadag.movieviewer.model.SeatMap
+import com.markcadag.movieviewer.model.*
 import com.markcadag.movieviewer.service.ApiService
 import com.markcadag.movieviewer.service.ServiceGenerator
 import com.markcadag.movieviewer.ui.base.BasePresenter
@@ -17,13 +16,21 @@ import retrofit2.Response
  */
 open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
     private var compositeDisposable : CompositeDisposable = CompositeDisposable()
+    var seatObserver: SeatClickObserver? = null
 
     override fun detachView() {
         super.detachView()
         compositeDisposable.dispose()
     }
 
+    fun observeSelectedSeats() {
+        checkViewAttached()
+
+        seatObserver =  SeatClickObserver(mvpView)
+    }
+
     fun fetchSeatMap() {
+        checkViewAttached()
 
         val apiService = ServiceGenerator.createService(ApiService::class.java)
                 .getSeatMap()
@@ -51,6 +58,7 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
     }
 
     fun fetchSchedule() {
+        checkViewAttached()
 
         val apiService = ServiceGenerator.createService(ApiService::class.java)
                 .getSchedule()
@@ -60,7 +68,7 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Response<ScheduleResp>>() {
                     override fun onError(e: Throwable) {
-                        mvpView?.onError(R.string.failed_to_fetch_movie)
+                        mvpView?.onError(R.string.failed_to_fetch_schedule)
                     }
 
                     override fun onNext(t: Response<ScheduleResp>) {
@@ -78,4 +86,39 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
 
 
     }
+
+    fun filterCinema(date : Date, schedule: ScheduleResp) {
+        checkViewAttached()
+
+        date.id?.let {
+            dateSelected ->
+            try {
+                val cinemaRoot: CinemaRoot? = schedule.cinemasRoot?.single {
+                    it?.parent == dateSelected
+                }
+
+             mvpView?.onLoadCinemas(cinemaRoot?.cinemas)
+            } catch (e: Exception) {
+                mvpView?.onErrorParsingSchedule()
+            }
+        }
+    }
+
+    fun filterTime(cinema : Cinema, schedule : ScheduleResp) {
+        checkViewAttached()
+
+        cinema.id?.let {
+            cinemaId ->
+            try {
+                val timeRoot: TimeRoot? = schedule.times?.single {
+                    it?.parent == cinemaId
+                }
+
+                mvpView?.onLoadTimeSchedule(timeRoot?.times)
+            } catch (e: Exception) {
+                mvpView?.onErrorParsingSchedule()
+            }
+        }
+    }
+
 }

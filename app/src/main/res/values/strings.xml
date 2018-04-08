@@ -14,4 +14,6 @@
     <string name="view_seat_map">View Seat Map</string>
     <string name="cast">Cast:</string>
     <string name="movie_screen">Movie Screen</string>
+    <string name="failed_to_fetch_schedule">Failed to fetch scehdule</string>
+    <string name="booking_maxed_out">Maximum of 6 reservation only</string>
 </resources>

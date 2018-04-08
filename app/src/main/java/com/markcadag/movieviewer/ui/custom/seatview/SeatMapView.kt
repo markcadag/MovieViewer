@@ -12,10 +12,12 @@ import java.util.*
 /**
  * Created by markcadag on 4/8/18.
  */
+//TODO mind to make it anko?
 open class SeatMapView : LinearLayout {
     private var seatMap : SeatMap? = null
-
-    //TODO make use of anko
+    private var onSeatClickListener : OnSeatClickListener? = null
+    var selectedSeats  = arrayListOf<SeatView>()
+    var maxBooking = 10
 
     constructor(context: Context) : super(context)
 
@@ -77,22 +79,44 @@ open class SeatMapView : LinearLayout {
         val seats = HashSet(seatMap?.available?.seats)
 
         row?.forEach {
-            if(it!!.contains("(")) {
-                /**
-                 * Add isle view is text contains "(" string value
-                 */
-                linearContainer.addView(IsleView(context))
-            } else {
-                val seatView = SeatView(context)
+            it?.let {
+               name ->
+                var seatStatus = SeatView.SeatStatus.Reserved
                 if (seats.contains(it)) {
-                    seatView.name = it
-                    seatView.seatStatus = SeatView.SeatStatus.Available
-                    linearContainer.addView(seatView)
-                } else {
-                    seatView.name = it
-                    seatView.seatStatus = SeatView.SeatStatus.Reserved
-                    linearContainer.addView(seatView)
+                    seatStatus = SeatView.SeatStatus.Available
+                } else if(name.contains("(")) {
+                    seatStatus = SeatView.SeatStatus.Space
                 }
+
+                val seatView = SeatView(context, name, seatStatus)
+                seatView.setOnClickListener {
+                    if (seatView.seatStatus == SeatView.SeatStatus.Available) {
+
+                        /**
+                         * Cancel click listener if booking is maxed out
+                         */
+                        if (selectedSeats.size > maxBooking) {
+                            onSeatClickListener?.onBookingMax()
+                            return@setOnClickListener
+                        }
+
+                        /**
+                         * Add seatview to selected seats
+                         */
+                        seatView.setStatus(SeatView.SeatStatus.Selected)
+                        selectedSeats.add(seatView)
+                    } else {
+
+                        /**
+                         * Remove seats logic
+                         */
+                        seatView.setStatus(SeatView.SeatStatus.Available)
+                        selectedSeats.remove(seatView)
+                    }
+                    onSeatClickListener?.onClickSeat(it as SeatView)
+                }
+
+                linearContainer.addView(seatView)
             }
         }
 
@@ -104,7 +128,16 @@ open class SeatMapView : LinearLayout {
         return linearContainer
     }
 
-    companion object {
-        val TAG = SeatMapView::class.java.simpleName
+    fun setONSeatClickListener(onSeatClickListener: OnSeatClickListener){
+        this.onSeatClickListener = onSeatClickListener
+    }
+
+    interface OnSeatClickListener {
+       fun onClickSeat(seatView : SeatView)
+       fun onBookingMax()
+    }
+
+    fun maxBooking(maxBooking: Int) {
+        this.maxBooking = maxBooking
     }
 }

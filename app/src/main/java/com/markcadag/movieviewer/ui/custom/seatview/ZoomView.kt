@@ -1,8 +1,5 @@
 package com.markcadag.movieviewer.ui.custom.seatview
 
-/**
- * Created by markcadag on 4/8/18.
- */
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
