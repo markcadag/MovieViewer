@@ -13,8 +13,6 @@ import com.markcadag.movieviewer.util.DateUtil
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import kotlinx.android.synthetic.main.item_movie_details.view.*
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.noButton
-import org.jetbrains.anko.yesButton
 
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnClickListener {
     private var movieDetailsPresenter : MovieDetailsPresenter? = null
@@ -62,8 +60,8 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnCl
          */
         alert(resources.getString(R.string.failed_to_fetch_movie),
                 resources.getString(R.string.something_went_wrong)) {
-            yesButton { showMovieDetails() }
-            noButton {  }
+            positiveButton("Retry") { showMovieDetails() }
+            negativeButton("No") {  }
         }.show()
 
     }
