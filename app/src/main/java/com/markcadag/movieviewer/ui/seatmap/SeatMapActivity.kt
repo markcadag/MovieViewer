@@ -105,7 +105,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
         item_frame_seatview.seatmap_view.selectedSeats = selectedSeats
         item_frame_seatview.seatmap_view.mapSeatMap()
         item_frame_seatview.seatmap_view.maxBooking(MAX_BOOKING)
-        item_frame_seatview.seatmap_view.setONSeatClickListener(this)
+        item_frame_seatview.seatmap_view.setOnSeatClickListener(this)
     }
 
     override fun onLoadScheduleResp(schedule: ScheduleResp) {
@@ -176,15 +176,6 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
             }
         }
     }
-//
-//    private fun resetView() {
-//        toast("View reset")
-//
-//        item_frame_seatview.seatmap_view.reset()
-//
-//        item_ll_total_price.txt_total_cost.text = resources.getString(R.string.php_0_00)
-//        txt_selected_seats.text = resources.getString(R.string.none)
-//    }
 
     private fun updateViews() {
         updateSelectedSeatsView()

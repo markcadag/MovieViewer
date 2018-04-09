@@ -155,7 +155,7 @@ open class SeatMapView : LinearLayout {
         mapSeatMap()
     }
 
-    fun setONSeatClickListener(onSeatClickListener: OnSeatClickListener){
+    fun setOnSeatClickListener(onSeatClickListener: OnSeatClickListener){
         this.onSeatClickListener = onSeatClickListener
     }
 
