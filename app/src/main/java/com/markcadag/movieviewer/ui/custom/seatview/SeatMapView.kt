@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -86,16 +85,16 @@ open class SeatMapView : LinearLayout {
             it?.let {
                name ->
                 var seatStatus = SeatView.SeatStatus.Reserved
-                if (seats.contains(it)) {
+
+                if (selectedSeats.contains(name)) {
+                    seatStatus = SeatView.SeatStatus.Selected
+                } else if (seats.contains(it)) {
                     seatStatus = SeatView.SeatStatus.Available
                 } else if(name.contains("(")) {
                     seatStatus = SeatView.SeatStatus.Space
-                } else if (selectedSeats.contains(name)) {
-                    Log.e("OMG2", "is selected " + name)
+                } else if (selectedSeats.contains(it)) {
                     seatStatus = SeatView.SeatStatus.Selected
                 }
-
-                Log.e("OMG1", selectedSeats.toString() + "OMG to =" + name )
 
                 val seatView = SeatView(context, name, seatStatus)
                 seatView.setOnClickListener {
@@ -121,11 +120,12 @@ open class SeatMapView : LinearLayout {
                          * Add seatview to selected seats
                          */
                         seatView.setStatus(SeatView.SeatStatus.Selected)
+                        if(!selectedSeats.contains(seatView.name))
                         selectedSeats.add(seatView.name)
                     } else {
 
                         /**
-                         * Remove seats logic
+                         * Remove seat logic
                          */
                         seatView.setStatus(SeatView.SeatStatus.Available)
                         selectedSeats.remove(seatView.name)
@@ -150,7 +150,6 @@ open class SeatMapView : LinearLayout {
     }
 
     fun reset() {
-
         removeAllViews()
         selectedSeats.clear()
         mapSeatMap()

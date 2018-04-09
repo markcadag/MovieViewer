@@ -28,6 +28,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     private var schedule : ScheduleResp? = null
     private var alertDIalog: Dialog? = null
     private val MAX_BOOKING = 10
+    private var selectedSeats = arrayListOf<String>()
 
     /**
      * Lifecycle methods
@@ -47,6 +48,9 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
         fetchSchedule()
     }
 
+    /**
+     * Restore activity state when switching to landscape mode
+     */
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putSerializable("selected_seats", item_frame_seatview.seatmap_view.selectedSeats);
@@ -54,10 +58,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        val selectedSeats = savedInstanceState?.getStringArrayList("selected_seats") as ArrayList<String>
-        item_frame_seatview.seatmap_view.selectedSeats = selectedSeats
-        item_frame_seatview.seatmap_view.mapSeatMap()
-        updateViews()
+        selectedSeats = savedInstanceState?.getStringArrayList("selected_seats") as ArrayList<String>
     }
 
     override fun onDestroy() {
@@ -101,6 +102,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
      */
     override fun onLoadSeatMap(seatMap: SeatMap) {
         item_frame_seatview.seatmap_view.setSeatMap(seatMap)
+        item_frame_seatview.seatmap_view.selectedSeats = selectedSeats
         item_frame_seatview.seatmap_view.mapSeatMap()
         item_frame_seatview.seatmap_view.maxBooking(MAX_BOOKING)
         item_frame_seatview.seatmap_view.setONSeatClickListener(this)

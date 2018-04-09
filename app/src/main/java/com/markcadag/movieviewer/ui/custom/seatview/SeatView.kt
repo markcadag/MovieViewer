@@ -28,7 +28,7 @@ class SeatView(context: Context?,var name: String,var seatStatus: SeatStatus) : 
             color = R.color.movieViewerBlue
         } else if (seatStatus == SeatStatus.Space) {
             color = android.R.color.transparent
-        } else {
+        } else if (seatStatus == SeatStatus.Selected) {
             color = R.color.movieViewerRed
         }
 
