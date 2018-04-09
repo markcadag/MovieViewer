@@ -23,6 +23,7 @@ open class MovieDetailsPresenter() : BasePresenter<MovieDetailsMvpView>() {
     }
 
     fun fetchMovie() {
+        checkViewAttached()
 
         val apiService = ServiceGenerator.createService(ApiService::class.java)
                 .getMovieDetails()
