@@ -13,13 +13,17 @@
             android:layout_height="wrap_content"
             tools:context="com.markcadag.movieviewer.ui.moviedetails.MovieDetailsActivity">
 
-            <ImageView
-                android:contentDescription="@string/movie_poster_landscape"
+            <com.markcadag.movieviewer.ui.custom.ProportionalImageView
                 android:id="@+id/img_mdetails"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+                android:contentDescription="@string/movie_poster_landscape"
+                android:minHeight="@dimen/_140sdp"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_140sdp" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                />
+
 
             <LinearLayout
                 android:id="@+id/ll_movie_details"

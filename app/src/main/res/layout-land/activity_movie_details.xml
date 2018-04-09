@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/ll_movie_details"
+        android:layout_above="@+id/txt_view_seat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="10">
+
+        <ImageView
+            android:contentDescription="@string/movie_poster"
+            android:id="@+id/img_movie_poster"
+            android:layout_margin="@dimen/_8sdp"
+            android:layout_weight="4"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_weight="6"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:padding="@dimen/_8sdp"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:divider="@drawable/vertical_divider"
+                android:showDividers="middle"
+                android:layout_height="wrap_content">
+
+                <com.markcadag.movieviewer.ui.custom.ProportionalImageView
+                    android:id="@+id/img_mdetails"
+                    android:contentDescription="@string/movie_poster_landscape"
+                    android:minHeight="@dimen/_90sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:adjustViewBounds="true"/>
+
+                <include
+                    android:id="@+id/item_movie_name"
+                    layout="@layout/item_movie_details" />
+
+                <include
+                    android:id="@+id/item_movie_genre"
+                    layout="@layout/item_movie_details" />
+
+                <include
+                    android:id="@+id/item_movie_advisory"
+                    layout="@layout/item_movie_details" />
+
+                <include
+                    android:id="@+id/item_movie_duration"
+                    layout="@layout/item_movie_details" />
+
+                <include
+                    android:id="@+id/item_movie_date"
+                    layout="@layout/item_movie_details" />
+
+                <include
+                    android:id="@+id/item_movie_syspnosis"
+                    layout="@layout/item_movie_details" />
+
+                <include
+                    android:id="@+id/item_movie_cast"
+                    layout="@layout/item_movie_details" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_view_seat"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@android:color/holo_red_dark"
+        android:gravity="center"
+        android:padding="@dimen/_12sdp"
+        android:textSize="@dimen/_16ssp"
+        android:textColor="@android:color/white"
+        android:text="@string/view_seat_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
