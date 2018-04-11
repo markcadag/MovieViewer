@@ -28,6 +28,8 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
         val apiService = ServiceGenerator.createService(ApiService::class.java)
                 .getSeatMap()
 
+        mvpView?.onTaskStarted()
+
         compositeDisposable.add(apiService
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -46,7 +48,9 @@ open class SeatMapPresenter : BasePresenter<SeatMapMvpView>() {
                         }
                     }
 
-                    override fun onComplete() { }
+                    override fun onComplete() {
+                        mvpView?.onComplete()
+                    }
                 }))
     }
 

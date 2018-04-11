@@ -2,19 +2,18 @@ package com.markcadag.movieviewer.ui.moviedetails
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.markcadag.movieviewer.R
 import com.markcadag.movieviewer.model.Movie
+import com.markcadag.movieviewer.ui.base.BaseActivity
 import com.markcadag.movieviewer.ui.seatmap.SeatMapActivity
 import com.markcadag.movieviewer.util.DateUtil
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import kotlinx.android.synthetic.main.item_movie_details.view.*
-import org.jetbrains.anko.alert
 
-class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnClickListener {
+class MovieDetailsActivity : BaseActivity(), MovieDetailsMvpView, View.OnClickListener {
     private var movieDetailsPresenter : MovieDetailsPresenter? = null
 
     /**
@@ -49,21 +48,21 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnCl
     /**
      * Mvp methods
      */
+    override fun onTaskStarted() {
+        showProgressDialog()
+    }
+
+    override fun onComplete() {
+        dismissProgressDialog()
+    }
+
     override fun onLoadMovieDetails(movie: Movie) {
         initView(movie)
     }
 
     override fun onError(errorStringResource: Int) {
-        /**
-         * Show error dialog when it fails to fetch movies
-         * and add retry button
-         */
-        alert(resources.getString(R.string.failed_to_fetch_movie),
-                resources.getString(R.string.something_went_wrong)) {
-            positiveButton("Retry") { showMovieDetails() }
-            negativeButton("No") {  }
-        }.show()
-
+        showErrorDialog()
+        dismissProgressDialog()
     }
 
     /**
@@ -130,6 +129,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsMvpView, View.OnCl
     private fun showSeatMap() {
         startActivity(Intent(this,SeatMapActivity::class.java))
     }
+
 
     /**
      * Extension functions

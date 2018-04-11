@@ -26,7 +26,7 @@ class SeatView(context: Context?,var name: String,var seatStatus: SeatStatus) : 
             color = R.color.movieViewerGrey
         } else if (seatStatus == SeatStatus.Reserved) {
             color = R.color.movieViewerBlue
-        } else if (seatStatus == SeatStatus.Space) {
+        } else if (seatStatus == SeatStatus.Isle) {
             color = android.R.color.transparent
         } else if (seatStatus == SeatStatus.Selected) {
             color = R.color.movieViewerRed
@@ -35,8 +35,18 @@ class SeatView(context: Context?,var name: String,var seatStatus: SeatStatus) : 
         setBackgroundColor(resources.getColor(this.color))
     }
 
+    /**
+     * Match width to height to achieve square text
+     */
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val width = measuredWidth
+        setMeasuredDimension(width, width)
+    }
+
     enum class SeatStatus {
-        Available, Reserved, Selected, Space
+        Available, Reserved, Selected, Isle
     }
 
 }

@@ -1,13 +1,12 @@
 package com.markcadag.movieviewer.ui.seatmap
 
-import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import com.markcadag.movieviewer.R
 import com.markcadag.movieviewer.model.*
+import com.markcadag.movieviewer.ui.base.BaseActivity
 import com.markcadag.movieviewer.ui.custom.seatview.SeatMapView
 import com.markcadag.movieviewer.ui.custom.seatview.SeatView
 import com.markcadag.movieviewer.util.TextUtil
@@ -16,17 +15,15 @@ import kotlinx.android.synthetic.main.item_frame_setview.view.*
 import kotlinx.android.synthetic.main.item_ll_schedule.view.*
 import kotlinx.android.synthetic.main.item_ll_selected_seats.view.*
 import kotlinx.android.synthetic.main.item_ll_total_price.view.*
-import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
 
-class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemSelectedListener, SeatMapView.OnSeatClickListener {
+class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelectedListener, SeatMapView.OnSeatClickListener {
     lateinit var seatMaprepsenter : SeatMapPresenter
     lateinit var scheduleAdapterDate: ScheduleAdapter
     lateinit var scheduleAdapterCinema: ScheduleAdapter
     lateinit var scheduleAdapterTime: ScheduleAdapter
     private var schedule : ScheduleResp? = null
-    private var alertDIalog: Dialog? = null
     private val MAX_BOOKING = 10
     private var selectedSeats = arrayListOf<String>()
 
@@ -39,10 +36,6 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
 
         seatMaprepsenter = SeatMapPresenter()
         seatMaprepsenter.attachView(this)
-
-        alertDIalog = alert(resources.getString(R.string.failed_to_fetch_schedule),
-                resources.getString(R.string.something_went_wrong))
-                .build()
 
         fetchSeatMap()
         fetchSchedule()
@@ -100,6 +93,14 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     /**
      * Mvp methods
      */
+    override fun onTaskStarted() {
+        showProgressDialog()
+    }
+
+    override fun onComplete() {
+        dismissProgressDialog()
+    }
+
     override fun onLoadSeatMap(seatMap: SeatMap) {
         item_frame_seatview.seatmap_view.setSeatMap(seatMap)
         item_frame_seatview.seatmap_view.selectedSeats = selectedSeats
@@ -141,11 +142,8 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
     }
 
     override fun onError(errorStringResource: Int) {
-        alertDIalog?.let {
-            if (!it.isShowing) {
-                alertDIalog?.show()
-            }
-        }
+        showErrorDialog()
+        dismissProgressDialog()
     }
 
     /**
@@ -164,7 +162,7 @@ class SeatMapActivity : AppCompatActivity(), SeatMapMvpView, AdapterView.OnItemS
         item_frame_seatview.seatmap_view.selectedSeats.forEach {
             stringList.add(it)
         }
-        item_ll_selected_seats.txt_selected_seats.text = TextUtil.toTagView(this, stringList)
+        item_ll_selected_seats.txt_selected_seats.text = TextUtil.toTagView(this,stringList)
     }
 
     private fun updateCost() {

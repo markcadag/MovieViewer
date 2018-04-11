@@ -28,6 +28,8 @@ open class MovieDetailsPresenter() : BasePresenter<MovieDetailsMvpView>() {
         val apiService = ServiceGenerator.createService(ApiService::class.java)
                 .getMovieDetails()
 
+        mvpView?.onTaskStarted()
+
         compositeDisposable.add(apiService
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -46,7 +48,9 @@ open class MovieDetailsPresenter() : BasePresenter<MovieDetailsMvpView>() {
                         }
                     }
 
-                    override fun onComplete() { }
+                    override fun onComplete() {
+                        mvpView?.onComplete()
+                    }
                 }))
     }
 }

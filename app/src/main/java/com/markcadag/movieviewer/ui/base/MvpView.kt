@@ -6,4 +6,6 @@ package com.markcadag.movieviewer.ui.base
  */
 interface MvpView {
     fun onError(errorStringResource: Int)
+    fun onTaskStarted()
+    fun onComplete()
 }
