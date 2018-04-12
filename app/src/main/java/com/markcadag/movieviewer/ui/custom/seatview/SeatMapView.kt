@@ -106,6 +106,13 @@ open class SeatMapView : LinearLayout {
                         return@setOnClickListener
                     }
 
+                    /**
+                     * Disable click event on isle
+                     */
+                    if (seatView.seatStatus == SeatView.SeatStatus.Isle) {
+                        return@setOnClickListener
+                    }
+
                     if (seatView.seatStatus == SeatView.SeatStatus.Available) {
 
                         /**
