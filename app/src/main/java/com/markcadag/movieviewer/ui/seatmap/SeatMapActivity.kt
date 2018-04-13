@@ -158,11 +158,13 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     }
 
     private fun updateSelectedSeatsView() {
-        val stringList = arrayListOf<String>()
-        item_frame_seatview.seatmap_view.selectedSeats.forEach {
-            stringList.add(it)
+        val chip = arrayListOf<Chip>()
+        seatMapView?.selectedSeats?.forEach {
+            chip.add(SeatChip(it))
         }
-        item_ll_selected_seats.txt_selected_seats.text = TextUtil.toTagView(this,stringList)
+
+        item_ll_selected_seats.chipview.adapter = mainChipViewAdapter
+        item_ll_selected_seats.chipview.chipList = chip
     }
 
     private fun updateCost() {
