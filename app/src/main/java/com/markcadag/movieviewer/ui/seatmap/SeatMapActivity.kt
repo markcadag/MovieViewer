@@ -188,6 +188,8 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
                 item_ll_total_price.txt_total_cost.text = TextUtil.toFormattedPrice(total)
             }
         }
+        val total = (cinemaPrice * seatMapView!!.selectedSeats.size)
+        item_ll_total_price.txt_total_cost.text = TextUtil.toFormattedPrice(total)
     }
 
     private fun updateViews() {
@@ -206,10 +208,17 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
                 R.layout.custom_dropdown_item, R.id.txt_title)
         item_ll_schedule.spinner_cinema.adapter = scheduleAdapterCinema
         item_ll_schedule.spinner_cinema.onItemSelectedListener = this
+    /**
+     * Reset views, and data state
+     */
+    private fun resetView() {
+        cinemaPrice = 0.00
         seatMapView?.disableSeatClick = true
         unZoomView()
+        item_ll_total_price.txt_total_cost.text = getString(R.string.php_0_00)
         seatMapView?.reset()
         updateViews()
+    }
 
         scheduleAdapterTime = ScheduleAdapter(this,
                 R.layout.custom_dropdown_item, R.id.txt_title)

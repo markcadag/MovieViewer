@@ -8,7 +8,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.markcadag.movieviewer"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     implementation "com.intuit.sdp:sdp-android:$ssp_sdp_version"
     implementation "com.intuit.ssp:ssp-android:$ssp_sdp_version"
+    implementation 'com.github.Plumillon:ChipView:1.2.0'
 
     //Anko
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
