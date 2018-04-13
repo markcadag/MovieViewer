@@ -13,6 +13,7 @@ class SeatView(context: Context?,var name: String,var seatStatus: SeatStatus) : 
 
     init {
         gravity = Gravity.CENTER
+        setPadding(1,1,1,1)
         setColor()
     }
 
@@ -40,9 +41,12 @@ class SeatView(context: Context?,var name: String,var seatStatus: SeatStatus) : 
      */
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        val width = measuredWidth
-        setMeasuredDimension(width, width)
+        var ar = measuredHeight
+        if(measuredWidth < measuredHeight) {
+            ar = measuredWidth
+        }
+//        val width = measuredWidth
+        setMeasuredDimension(ar, ar)
     }
 
     enum class SeatStatus {
