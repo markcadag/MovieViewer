@@ -26,6 +26,7 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     private var schedule : ScheduleResp? = null
     private val MAX_BOOKING = 10
     private var selectedSeats = arrayListOf<String>()
+    private var cinemaPrice = 0.00
 
     /**
      * Lifecycle methods
@@ -65,25 +66,35 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     override fun onNothingSelected(parent: AdapterView<*>?) { }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
         schedule?.let {
             when(parent?.id) {
                 R.id.spinner_date -> {
                     seatMaprepsenter.filterCinema(scheduleAdapterDate.getItem(position) as Date, it)
+                    resetView()
                 }
 
                 R.id.spinner_cinema -> {
                     seatMaprepsenter.filterTime(scheduleAdapterCinema.getItem(position) as Cinema, it)
+                    resetView()
                 }
 
                 R.id.spinner_time -> {
                     updateViews()
+                    val time = scheduleAdapterTime.getItem(position) as? Time
+                    time?.price?.let {
+                        resetView()
+                        cinemaPrice = it.toDouble()
+                        seatMapView?.disableSeatClick = false
+                    }
                 }
+                else -> { }
             }
         }
     }
 
     override fun onClickSeat(seatView: SeatView) {
-       updateViews()
+        updateViews()
     }
 
     override fun onBookingMax() {
@@ -102,11 +113,8 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     }
 
     override fun onLoadSeatMap(seatMap: SeatMap) {
-        item_frame_seatview.seatmap_view.setSeatMap(seatMap)
-        item_frame_seatview.seatmap_view.selectedSeats = selectedSeats
-        item_frame_seatview.seatmap_view.mapSeatMap()
-        item_frame_seatview.seatmap_view.maxBooking(MAX_BOOKING)
-        item_frame_seatview.seatmap_view.setOnSeatClickListener(this)
+        seatMapView?.mapSeatMap()
+        seatMapView?.maxBooking(MAX_BOOKING)
     }
 
     override fun onLoadScheduleResp(schedule: ScheduleResp) {
@@ -115,14 +123,19 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     }
 
     override fun onLoadTimeSchedule(times: List<Time?>?) {
-        scheduleAdapterTime.clear()
+        scheduleAdapterTime = ScheduleAdapter(this,
+                R.layout.custom_dropdown_item, R.id.txt_title)
         scheduleAdapterTime.addAll(times)
+        item_ll_schedule.spinner_time.adapter = scheduleAdapterTime
         item_ll_schedule.spinner_time.onItemSelectedListener = this
     }
 
     override fun onLoadCinemas(cinemas: List<Cinema?>?) {
-        scheduleAdapterCinema.clear()
+        scheduleAdapterCinema = ScheduleAdapter(this,
+                R.layout.custom_dropdown_item, R.id.txt_title)
         scheduleAdapterCinema.addAll(cinemas)
+        item_ll_schedule.spinner_cinema.adapter = scheduleAdapterCinema
+        item_ll_schedule.spinner_cinema.onItemSelectedListener = this
     }
 
     override fun onFailedToFetchTime() {
@@ -193,10 +206,16 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
                 R.layout.custom_dropdown_item, R.id.txt_title)
         item_ll_schedule.spinner_cinema.adapter = scheduleAdapterCinema
         item_ll_schedule.spinner_cinema.onItemSelectedListener = this
+        seatMapView?.disableSeatClick = true
+        unZoomView()
+        seatMapView?.reset()
+        updateViews()
 
         scheduleAdapterTime = ScheduleAdapter(this,
                 R.layout.custom_dropdown_item, R.id.txt_title)
         item_ll_schedule.spinner_time.adapter = scheduleAdapterTime
+    private fun unZoomView() {
+        zoomView?.smoothZoomTo(1.0f, 0f, 0f)
     }
 
     companion object {

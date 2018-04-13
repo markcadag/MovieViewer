@@ -4,8 +4,10 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import com.markcadag.movieviewer.R
 import com.markcadag.movieviewer.model.SeatMap
@@ -17,9 +19,10 @@ import java.util.*
 //TODO mind to make it anko?
 open class SeatMapView : LinearLayout {
     private var seatMap : SeatMap? = null
-    private var onSeatClickListener : OnSeatClickListener? = null
+    private var onSeatListener : OnSeatListener? = null
     var selectedSeats  = arrayListOf<String>()
-    var maxBooking = 10
+    private var maxBooking = 10
+    var disableSeatClick = true
 
     constructor(context: Context) : super(context)
 
@@ -30,17 +33,26 @@ open class SeatMapView : LinearLayout {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
+
+
     init {
         this.orientation = LinearLayout.VERTICAL
-        this.addView(LayoutInflater.from(context).inflate(R.layout.row_banner, this, false))
-
     }
 
+
     fun setSeatMap(seatMap: SeatMap) {
+        /**
+         * Compute for the weightsum
+         */
+        seatMap.seatmap?.size?.toFloat()?.let {
+            this.weightSum = it
+        }
         this.seatMap = seatMap
     }
 
     fun mapSeatMap() {
+        this.addView(LayoutInflater.from(context).inflate(R.layout.row_banner, this, false))
+
         seatMap?.seatmap?.forEach {
             /**
              * Get row name/title
@@ -59,6 +71,11 @@ open class SeatMapView : LinearLayout {
      */
     private fun createRow(name : String,row : List<String?>?) : View {
         val linearContainer = LinearLayout(context)
+        linearContainer.gravity = Gravity.CENTER
+        linearContainer.orientation = LinearLayout.HORIZONTAL
+        val lp = LinearLayout.LayoutParams(MATCH_PARENT, 0)
+        lp.weight = 1f
+        linearContainer.layoutParams = lp
 
         /**
          * Guard float value, compute for the weight of the view
@@ -91,13 +108,20 @@ open class SeatMapView : LinearLayout {
                 } else if (seats.contains(it)) {
                     seatStatus = SeatView.SeatStatus.Available
                 } else if(name.contains("(")) {
-                    seatStatus = SeatView.SeatStatus.Space
+                    seatStatus = SeatView.SeatStatus.Isle
                 } else if (selectedSeats.contains(it)) {
                     seatStatus = SeatView.SeatStatus.Selected
                 }
 
                 val seatView = SeatView(context, name, seatStatus)
                 seatView.setOnClickListener {
+
+                    /**
+                     * Add view property if seat map is clickable
+                     */
+                    if(disableSeatClick){
+                        return@setOnClickListener
+                    }
 
                     /**
                      * Disable click event on reserved seats
@@ -119,7 +143,7 @@ open class SeatMapView : LinearLayout {
                          * Cancel click listener if booking is maxed out
                          */
                         if (selectedSeats.size >= maxBooking) {
-                            onSeatClickListener?.onBookingMax()
+                            onSeatListener?.onBookingMax()
                             return@setOnClickListener
                         }
 
@@ -137,7 +161,7 @@ open class SeatMapView : LinearLayout {
                         seatView.setStatus(SeatView.SeatStatus.Available)
                         selectedSeats.remove(seatView.name)
                     }
-                    onSeatClickListener?.onClickSeat(it as SeatView)
+                    onSeatListener?.onClickSeat(it as SeatView)
                 }
 
                 linearContainer.addView(seatView)
@@ -157,16 +181,16 @@ open class SeatMapView : LinearLayout {
     }
 
     fun reset() {
-        removeAllViews()
         selectedSeats.clear()
+        this.removeAllViews()
         mapSeatMap()
     }
 
-    fun setOnSeatClickListener(onSeatClickListener: OnSeatClickListener){
-        this.onSeatClickListener = onSeatClickListener
+    fun setOnSeatClickListener(onSeatListener: OnSeatListener?){
+        this.onSeatListener = onSeatListener
     }
 
-    interface OnSeatClickListener {
+    interface OnSeatListener {
        fun onClickSeat(seatView : SeatView)
        fun onBookingMax()
     }
