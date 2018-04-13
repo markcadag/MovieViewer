@@ -23,19 +23,19 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
 
-    <include
+    <FrameLayout
         android:id="@+id/item_frame_seatview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/item_ll_legend"
-        layout="@layout/item_frame_setview" />
+        android:layout_above="@+id/item_ll_selected_seats"
+        android:layout_below="@+id/item_ll_legend" />
 
     <include
         android:id="@+id/item_ll_selected_seats"
-        android:layout_below="@id/item_frame_seatview"
+        layout="@layout/item_ll_selected_seats"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/item_ll_selected_seats" />
+        android:layout_height="@dimen/_100sdp"
+        android:layout_above="@+id/item_ll_total_price" />
 
     <include
         android:id="@+id/item_ll_total_price"

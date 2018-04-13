@@ -6,19 +6,24 @@ import android.view.View
 import android.widget.AdapterView
 import com.markcadag.movieviewer.R
 import com.markcadag.movieviewer.model.*
+import com.markcadag.movieviewer.model.Date
 import com.markcadag.movieviewer.ui.base.BaseActivity
 import com.markcadag.movieviewer.ui.custom.seatview.SeatMapView
 import com.markcadag.movieviewer.ui.custom.seatview.SeatView
+import com.markcadag.movieviewer.ui.custom.seatview.ZoomView
+import com.markcadag.movieviewer.ui.custom.tagview.MainChipViewAdapter
+import com.markcadag.movieviewer.ui.custom.tagview.SeatChip
 import com.markcadag.movieviewer.util.TextUtil
+import com.plumillonforge.android.chipview.Chip
 import kotlinx.android.synthetic.main.activity_seat_map.*
-import kotlinx.android.synthetic.main.item_frame_setview.view.*
 import kotlinx.android.synthetic.main.item_ll_schedule.view.*
 import kotlinx.android.synthetic.main.item_ll_selected_seats.view.*
 import kotlinx.android.synthetic.main.item_ll_total_price.view.*
 import org.jetbrains.anko.toast
+import java.util.*
 
 
-class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelectedListener, SeatMapView.OnSeatClickListener {
+class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelectedListener, SeatMapView.OnSeatListener {
     lateinit var seatMaprepsenter : SeatMapPresenter
     lateinit var scheduleAdapterDate: ScheduleAdapter
     lateinit var scheduleAdapterCinema: ScheduleAdapter
@@ -26,7 +31,14 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     private var schedule : ScheduleResp? = null
     private val MAX_BOOKING = 10
     private var selectedSeats = arrayListOf<String>()
+    private var zoomView: ZoomView? = null
+    private var seatMapView: SeatMapView? = null
     private var cinemaPrice = 0.00
+    var check = 0
+
+    private val mainChipViewAdapter : MainChipViewAdapter by lazy {
+        MainChipViewAdapter(this)
+    }
 
     /**
      * Lifecycle methods
@@ -38,6 +50,14 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
         seatMaprepsenter = SeatMapPresenter()
         seatMaprepsenter.attachView(this)
 
+        zoomView = ZoomView(this)
+        seatMapView = SeatMapView(this)
+        seatMapView?.setOnSeatClickListener(this)
+
+        zoomView?.addView(seatMapView)
+
+        item_frame_seatview.addView(zoomView)
+
         fetchSeatMap()
         fetchSchedule()
     }
@@ -47,7 +67,7 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
      */
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putSerializable("selected_seats", item_frame_seatview.seatmap_view.selectedSeats);
+        outState?.putSerializable("selected_seats", seatMapView?.selectedSeats);
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -80,7 +100,6 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
                 }
 
                 R.id.spinner_time -> {
-                    updateViews()
                     val time = scheduleAdapterTime.getItem(position) as? Time
                     time?.price?.let {
                         resetView()
@@ -113,6 +132,8 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     }
 
     override fun onLoadSeatMap(seatMap: SeatMap) {
+        seatMapView?.setSeatMap(seatMap)
+        seatMapView?.selectedSeats = selectedSeats
         seatMapView?.mapSeatMap()
         seatMapView?.maxBooking(MAX_BOOKING)
     }
@@ -181,13 +202,6 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
     }
 
     private fun updateCost() {
-        if(item_ll_schedule.spinner_time.selectedItemPosition != -1) {
-            val time = scheduleAdapterTime.getItem(item_ll_schedule.spinner_time.selectedItemPosition) as? Time
-            time?.price?.toFloat()?.let {
-                val total = (it * item_frame_seatview.seatmap_view.selectedSeats.size).toDouble()
-                item_ll_total_price.txt_total_cost.text = TextUtil.toFormattedPrice(total)
-            }
-        }
         val total = (cinemaPrice * seatMapView!!.selectedSeats.size)
         item_ll_total_price.txt_total_cost.text = TextUtil.toFormattedPrice(total)
     }
@@ -203,11 +217,8 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
         scheduleAdapterDate.addAll(schedule?.dates)
         item_ll_schedule.spinner_date.adapter = scheduleAdapterDate
         item_ll_schedule.spinner_date.onItemSelectedListener = this
+    }
 
-        scheduleAdapterCinema = ScheduleAdapter(this,
-                R.layout.custom_dropdown_item, R.id.txt_title)
-        item_ll_schedule.spinner_cinema.adapter = scheduleAdapterCinema
-        item_ll_schedule.spinner_cinema.onItemSelectedListener = this
     /**
      * Reset views, and data state
      */
@@ -220,9 +231,6 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
         updateViews()
     }
 
-        scheduleAdapterTime = ScheduleAdapter(this,
-                R.layout.custom_dropdown_item, R.id.txt_title)
-        item_ll_schedule.spinner_time.adapter = scheduleAdapterTime
     private fun unZoomView() {
         zoomView?.smoothZoomTo(1.0f, 0f, 0f)
     }

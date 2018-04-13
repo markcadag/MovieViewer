@@ -8,7 +8,7 @@
     android:weightSum="2"
     tools:context="com.markcadag.movieviewer.ui.seatmap.SeatMapActivity">
 
-    <include
+    <FrameLayout
         android:id="@+id/item_frame_seatview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

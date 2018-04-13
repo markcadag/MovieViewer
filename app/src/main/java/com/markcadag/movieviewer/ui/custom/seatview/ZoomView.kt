@@ -14,7 +14,7 @@ class ZoomView : FrameLayout {
     // zooming
     var zoom = 1.0f
         internal set
-    internal var maxZoom = 2.0f
+    internal var maxZoom = 4.0f
     internal var smoothZoom = 1.0f
     internal var zoomX: Float = 0.toFloat()
     internal var zoomY: Float = 0.toFloat()
