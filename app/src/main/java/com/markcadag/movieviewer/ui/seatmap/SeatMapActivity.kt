@@ -120,6 +120,10 @@ class SeatMapActivity : BaseActivity(), SeatMapMvpView, AdapterView.OnItemSelect
         toast(resources.getString(R.string.booking_maxed_out))
     }
 
+    override fun onClickDisabled() {
+        toast("Unable To Reserve Seat")
+    }
+
     /**
      * Mvp methods
      */

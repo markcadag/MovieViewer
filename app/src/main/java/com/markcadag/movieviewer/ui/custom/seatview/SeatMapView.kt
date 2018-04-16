@@ -52,7 +52,6 @@ open class SeatMapView : LinearLayout {
 
     fun mapSeatMap() {
         this.addView(LayoutInflater.from(context).inflate(R.layout.row_banner, this, false))
-
         seatMap?.seatmap?.forEach {
             /**
              * Get row name/title
@@ -91,7 +90,9 @@ open class SeatMapView : LinearLayout {
         /**
          * Add the first row name
          */
-        linearContainer.addView(SeatNameView(context, name))
+        val seatName = SeatNameView(context)
+        seatName.setText(name)
+        linearContainer.addView(seatName)
 
         /**
          * Add logic on how the setview should be displayed
@@ -120,6 +121,7 @@ open class SeatMapView : LinearLayout {
                      * Add view property if seat map is clickable
                      */
                     if(disableSeatClick){
+                        onSeatListener?.onClickDisabled()
                         return@setOnClickListener
                     }
 
@@ -171,7 +173,9 @@ open class SeatMapView : LinearLayout {
         /**
          * Add the last row name
          */
-        linearContainer.addView(SeatNameView(context, name))
+        val seatName2 = SeatNameView(context)
+        seatName2.setText(name)
+        linearContainer.addView(seatName2)
 
         return linearContainer
     }
@@ -193,6 +197,7 @@ open class SeatMapView : LinearLayout {
     interface OnSeatListener {
        fun onClickSeat(seatView : SeatView)
        fun onBookingMax()
+       fun onClickDisabled()
     }
 
 }
